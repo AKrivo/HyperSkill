@@ -1,21 +1,7 @@
-camel = r"""
-Switching on the camera in the camel habitat...
- ___.-''''-.
-/___  @    |
-',,,,.     |         _.'''''''._
-     '     |        /           \
-     |     \    _.-'             \
-     |      '.-'                  '-.
-     |                               ',
-     |                                '',
-      ',,-,                           ':;
-           ',,| ;,,                 ,' ;;
-              ! ; !'',,,',',,,,'!  ;   ;:
-             : ;  ! !       ! ! ;  ;   :;
-             ; ;   ! !      ! !  ; ;   ;,
-            ; ;    ! !     ! !   ; ;
-            ; ;    ! !    ! !     ; ;
-           ;,,      !,!   !,!     ;,;
-           /_I      L_I   L_I     /_I
-Look at that! Our little camel is sunbathing!"""
-print(camel)
+# Save the input in this variable
+ticket = input()
+
+# Add up the digits for each half
+half1 = int(ticket[0]) + int(ticket[1]) + int(ticket[2])
+half2 = int(ticket[3]) + int(ticket[4]) + int(ticket[5])
+print(half1, half2)
