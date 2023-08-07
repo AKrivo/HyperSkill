@@ -1,21 +1,3 @@
-hero_damage = 100
+old_list = [int(num) for num in input().split()]
 
-
-def double_damage():
-    global hero_damage
-    hero_damage *= 2
-    pass
-
-
-def disarmed():
-    global hero_damage
-    hero_damage *= 0.1
-    pass
-
-
-def power_potion():
-    global hero_damage
-    hero_damage += 100
-    pass
-disarmed()
-print(hero_damage)
+binary_list = [1 if x > 0 else 0 for x in old_list] # your code here
