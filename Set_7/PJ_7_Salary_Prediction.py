@@ -3,10 +3,10 @@ import requests
 
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_absolute_percentage_error as mape
-
 
 # checking ../Data directory presence
 if not os.path.exists('../Data'):
@@ -21,9 +21,7 @@ if 'data.csv' not in os.listdir('../Data'):
 # read data
 data = pd.read_csv('../Data/data.csv')
 
-# write your code here
 # Stage 1/5
-
 # Assigning the linear regression model
 model = LinearRegression()
 
@@ -49,7 +47,7 @@ b_coef = model.intercept_
 
 # Visualizing
 fig, axes = plt.subplots(figsize=(8, 8))
-axes.scatter(data['rating'], data['salary'], s=10,  c='g', label='Core Data')
+axes.scatter(data['rating'], data['salary'], s=10, c='g', label='Core Data')
 axes.scatter(X_test, Y_predict_test, c='b', label='Basic linear prediction')
 axes.plot(X_test, [a_coef * X_test.iloc[i] + b_coef for i in range(len(X_test))],
           c='m',
@@ -60,11 +58,8 @@ axes.grid()
 # plt.show()
 
 # Stage 2/5
-
 # Transformation of the predictor (in powers: 2, 3, 4)
-X_p2 = X**2
-X_p3 = X**3
-X_p4 = X**4
+X_p2, X_p3, X_p4 = X ** 2, X ** 3, X ** 4
 
 # Splitting the data to test and train samples
 X_train_p2, X_test_p2, y_train_p2, y_test_p2 = train_test_split(X_p2, y, test_size=0.3, random_state=100)
@@ -72,9 +67,7 @@ X_train_p3, X_test_p3, y_train_p3, y_test_p3 = train_test_split(X_p3, y, test_si
 X_train_p4, X_test_p4, y_train_p4, y_test_p4 = train_test_split(X_p4, y, test_size=0.3, random_state=100)
 
 # Training the model
-model_p2 = LinearRegression()
-model_p3 = LinearRegression()
-model_p4 = LinearRegression()
+model_p2, model_p3, model_p4 = LinearRegression(), LinearRegression(), LinearRegression()
 model_p2.fit(X_train_p2, y_train_p2)
 model_p3.fit(X_train_p3, y_train_p3)
 model_p4.fit(X_train_p4, y_train_p4)
@@ -96,4 +89,75 @@ axes.scatter(X_test, Y_predict_test_p4, c='c', label='Quartic  predictor')
 axes.legend()
 plt.show()
 
-print(mape_p3.round(5))
+# Stage 3/5
+# Assigning the linear regression model
+multy_model = LinearRegression()
+
+# Extraction the data from DataFrame
+X_m, y_m = data.drop(['salary'], axis=1), data['salary']
+
+# Splitting the data to test and train samples
+X_m_train, X_m_test, y_m_train, y_m_test = train_test_split(X_m, y_m, test_size=0.3, random_state=100)
+
+# Training the model
+multy_model.fit(X_m_train, y_m_train)
+
+# Extraction of the coefficients and intercept
+w_coef = multy_model.coef_
+w0_coef = multy_model.intercept_
+
+
+# Stage 4/5
+
+def corr_model(predictor, target, max_corr=0.2):
+
+    X_train, X_test, y_train, y_test = (
+        train_test_split(predictor, target, test_size=0.3, random_state=100))
+    corr = predictor.corr()
+    high_corr = (corr
+                 .where((corr > max_corr) & (corr != 1.0))
+                 .dropna(how='all')
+                 .dropna(axis=1, how='all')
+                 .columns.tolist())
+    model = LinearRegression()
+    mape_list = []
+
+    for i in range(len(high_corr)):
+
+        Train_x = X_train.drop([high_corr[i]], axis=1)
+        Test_x = X_test.drop([high_corr[i]], axis=1)
+        model.fit(Train_x, y_train)
+        Y_predict_test = model.predict(Test_x)
+        m = mape(y_test, Y_predict_test)
+        mape_list.append(m)
+        print(Train_x.head(), m)
+        for j in range(i + 1, len(high_corr)):
+            Train_x = X_train.drop([high_corr[i], high_corr[j]], axis=1)
+            Test_x = X_test.drop([high_corr[i], high_corr[j]], axis=1)
+            model.fit(Train_x, y_train)
+            Y_predict_test = model.predict(Test_x)
+            m = mape(y_test, Y_predict_test)
+            mape_list.append(m)
+            print(Train_x.head(), m)
+    return min(mape_list).round(5)
+#corr_model(X_m, y_m)
+#print(corr_model(X_m, y_m))
+
+
+# Stage 5/5
+
+X_train, X_test, y_train, y_test = (
+    train_test_split(X_m, y_m, test_size=0.3, random_state=100))
+
+Train_x = X_train.drop(['age', 'experience'], axis=1)
+Test_x = X_test.drop(['age', 'experience'], axis=1)
+model.fit(Train_x, y_train)
+Y_predict_test_0 = model.predict(Test_x)
+Y_predict_test_m = model.predict(Test_x)
+Y_predict_test_0[Y_predict_test_0 < 0] = 0
+Y_predict_test_m[Y_predict_test_m < 0] = np.mean(Y_predict_test_m)
+m_0 = mape(y_test, Y_predict_test_0)
+m_m = mape(y_test, Y_predict_test_m)
+print(min(m_0, m_m).round(5))
+
+#m = mape(y_test, Y_predict_test)
