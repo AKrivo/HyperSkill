@@ -40,8 +40,8 @@ A_df = pd.read_xml('../Data/A_office_data.xml')
 B_df = pd.read_xml('../Data/B_office_data.xml')
 hr_df = pd.read_xml('../Data/hr_data.xml')
 
-def newIndex(DataFrame, column, pref):
 
+def newIndex(DataFrame, column, pref):
     """ DataFrame is df to modify
        column is target column
        pref is prefix """
@@ -53,6 +53,7 @@ def newIndex(DataFrame, column, pref):
 
     return pd.Series(res)
 
+
 A_df = A_df.set_index(newIndex(A_df, "employee_office_id", "A"))
 B_df = B_df.set_index(newIndex(B_df, "employee_office_id", "B"))
 hr_df.set_index("employee_id", drop=False, inplace=True)
@@ -63,8 +64,49 @@ new_df = AB_df.merge(hr_df, left_index=True,
                      right_index=True, indicator=True).drop(["employee_office_id",
                                                              "employee_id", "_merge"], axis=1)
 
+
 new_df.sort_index(inplace=True)
+# Part 3/5
 
-print(new_df.index.to_list())
-print(new_df.columns.to_list())
+x = new_df.sort_values(by='average_monthly_hours', ascending=False).head(10)['Department'].to_list()
+y = new_df.query("Department == 'IT' & salary == 'low'")['number_project'].sum()
+z = new_df.loc[['A4', 'B7064', 'A3033'], ['last_evaluation', 'satisfaction_level']].values.tolist()
 
+
+# print(x)
+# print(y)
+# print(z)
+
+# Part 4/5
+
+def count_bigger_5(employee_project_counts):
+    return sum(employee_project_counts > 5)
+
+
+# x = new_df[new_df.number_project > 5].number_project.count()
+# x = new_df.agg({'number_project': ['mean', count_bigger_5]}).round(2)
+
+x = (
+    new_df.groupby('left')
+    .agg(
+        {
+            'number_project': ['median', count_bigger_5],
+            'time_spend_company': ['mean', 'median'],
+            'Work_accident': ['mean'],
+            'last_evaluation': ['mean', 'std']
+        }
+    )
+    .round(2)
+    .to_dict()
+)
+
+# Part 5/5
+
+table = new_df.pivot_table(index="Department", columns=["left", "salary"], values="average_monthly_hours", aggfunc='median').round(2)
+x = table.where((table[(0, 'high')] < table[(0, 'medium')]) | (table[(1, 'low')] < table[(1, 'high')])).dropna().to_dict()
+
+table2 = new_df.pivot_table(index="time_spend_company", columns="promotion_last_5years", values=['satisfaction_level', 'last_evaluation'], aggfunc=['max', 'mean', 'min']).round(2)
+z = table2.where(table2['mean', 'last_evaluation', 0] > table2['mean', 'last_evaluation', 1]).dropna().to_dict()
+
+print(x)
+print(z)
