@@ -26,3 +26,6 @@ _Linear regression is one of the simplest yet powerful tools for finding regular
 
 ## Set_8/PJ_8_Neural_Network_from_Scratch.py
 _Let's train a very simple but fully connected neural network! In this project, we'll create the necessary metric functions and use custom feedforward and backpropagation methods and functions, all done by hand. The dataset for this project is Fashion-MNIST – no more boring number recognition._
+
+## Set_9/PJ_9_Classification_of_Handwritten_Digits.py
+_In this project, you are going to explore the main classification algorithms and learn how to find and train the best possible model for the classification of handwritten digits. You will need to process a dataset that includes images of handwritten numbers from 0 to 9. The ultimate goal is to train the model to identify a digit on the picture. Sounds interesting? Let's dive into it!_
