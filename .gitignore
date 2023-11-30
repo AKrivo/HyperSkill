@@ -1,4 +1,8 @@
 /Data/
 Data/data.csv
 Data/fashion-mnist_test.csv
+<<<<<<< HEAD
 Data/fashion-mnist_train.csv
+=======
+Data/fashion-mnist_train.csv
+>>>>>>> HyperSkill/Test
