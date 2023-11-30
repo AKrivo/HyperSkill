@@ -1,1 +1,4 @@
 /Data/
+Data/data.csv
+Data/fashion-mnist_test.csv
+Data/fashion-mnist_train.csv
