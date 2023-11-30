@@ -18,7 +18,7 @@ _Everyone knows that people are bad at generating random things. In this project
 ## Set_5/PJ_5_HR_Data_Analysis.py
 _You work as an analyst in a company. The company's HR boss provided you with three datasets. The first two contain information about employees' performance in offices A and B: how much they work, their salaries, the number of their projects, departments, and so on. The third one is an extensive dataset with information on the employees' satisfaction with their jobs, their latest evaluation metrics, and the current status in the company. Your task is to analyze the data and answer some of the HR’s questions._
 
-##Set_6/PJ_6_Data_Analysis_for_Hospitals.py
+## Set_6/PJ_6_Data_Analysis_for_Hospitals.py
 _You know the story. Data is everywhere: texts, images, news, and spreadsheets. It affects our habits and defines our future. The amount of data is growing by the second. How can one stay afloat in this great sea of data? Data analysis is required in any line of business. In this project, you will conduct a comprehensive study with pandas. You will upload datasets, deal with data omissions and incorrect data filling, find the main statistical characteristics, and visualize your data. Let's do it!_
 
 ## Set_7/PJ_7_Salary_Prediction.py
